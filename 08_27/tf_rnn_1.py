@@ -71,18 +71,17 @@ timeseries_X_scaled = []
 for items in timeseries_X:
     timeseries_X_scaled.append(preprocessing.scale(items))
 
-print(len(timeseries_Y), len(timeseries_Y[0]), len(timeseries_Y[0][0]))
-
 # filtering
 
-fs = 20
-fc = .5  # Cut-off frequency of the filter
-w = fc / (fs / 2) # Normalize the frequency
+# fs = 20
+# fc = .5  # Cut-off frequency of the filter
+# w = fc / (fs / 2) # Normalize the frequency
 
-for points in range(len(timeseries_Y_scaled)):# finish this (filtering...)
-    normal = np.copy(np.swapaxes(timeseries_Y_scaled,0, 1)[:,2,0])
-    b, a = signal.butter(1, w, 'low')
-    filtered = signal.filtfilt(b, a, normal)
+# for points in range(len(timeseries_Y_scaled)):# finish this (filtering...)
+#     normal = np.copy(np.swapaxes(timeseries_Y_scaled,0, 1)[:,2,0])
+#     b, a = signal.butter(1, w, 'low')
+#     filtered = signal.filtfilt(b, a, normal)
+
 # N = 5
 # filtered = np.convolve(normal, np.ones((N,))/N, mode = "valid")
 
@@ -90,30 +89,33 @@ for points in range(len(timeseries_Y_scaled)):# finish this (filtering...)
 # plt.plot(filtered)
 # plt.show()
 
-
 # ******************* Writing video ********************
 
-cap = cv2.VideoCapture('../../../Google Drive/Projects/PhD/Pubs_n_Confs/Shape_reconstruction/data/08_14/lines/batch_1000_1.avi')
+# cap = cv2.VideoCapture('../../../Google Drive/Projects/PhD/Pubs_n_Confs/Shape_reconstruction/data/08_14/lines/batch_1000_1.avi')
 
-i_time = 0
-while(True):
-    ret, frame = cap.read()
-    frame = frame[60:400, 148:485]
+# i_time = 0
+# while(True):
+#     ret, frame = cap.read()
+#     frame = frame[60:400, 148:485]
 
-    for i in range(len(timeseries_Y)):
-        cv2.circle(frame, (timeseries_Y[i][i_time][0], timeseries_Y[i][i_time][1]), 6, (0, 255, 0), -1)
-        # cv2.putText(frame,str(i), (sort_all[i][0], sort_all[i][1] + 2), font, fontScale, fontColor, lineType)
+#     rows, cols, ch = frame.shape
+#     M = cv2.getRotationMatrix2D((cols/2,rows/2),2,1)
+#     frame = cv2.warpAffine(frame,M,(cols,rows))
 
-    i_time += 1
+#     for i in range(len(timeseries_Y)):
+#         cv2.circle(frame, (timeseries_Y[i][i_time][0], timeseries_Y[i][i_time][1]), 6, (0, 255, 0), -1)
+#         # cv2.putText(frame,str(i), (sort_all[i][0], sort_all[i][1] + 2), font, fontScale, fontColor, lineType)
 
-    time.sleep(0.05)
+#     i_time += 1
 
-    cv2.imshow('Image', frame)
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
+#     time.sleep(0.05)
 
-cap.release()
-cv2.destroyAllWindows()
+#     cv2.imshow('Image', frame)
+#     if cv2.waitKey(1) & 0xFF == ord('q'):
+#         break
+
+# cap.release()
+# cv2.destroyAllWindows()
 
 
 

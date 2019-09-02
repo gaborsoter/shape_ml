@@ -40,6 +40,10 @@ plt.plot(ts_data.x_data,ts_data.y_true)
 
 num_time_steps=30
 y1,y2,ts= ts_data.next_batch(1,num_time_steps,True)
+
+print('y1: ', y1,'y2: ', y2,'ts: ',ts)
+
+
 print(ts.flatten().shape)
 
 
