@@ -3,9 +3,6 @@ import numpy as np
 from scipy import signal
 from sklearn import preprocessing
 
-file_X = open("../data/lines_X.txt","w+")
-file_Y = open("../data/lines_Y.txt","w+")
-
 # Pointcloud
 
 content = open("../data/image_processing_dots_lines.txt", "r").read().splitlines()
@@ -34,13 +31,18 @@ timeseries_Y_scaled = []
 
 for items in timeseries_Y:
 	timeseries_Y_scaled.append(preprocessing.scale(items))
-	file_Y.write(str(np.ndarray.tolist(preprocessing.scale(items))))
-	file_Y.write("\n")
-	file_Y.flush()
 
-# Skinflow scaled
+print(timeseries_X_scaled[0])
+
+
+# plt.plot(timeseries_X_scaled[0])
+# plt.show()
+
+# Skinflow
 
 content = open("../data/image_processing_skinflow_lines.txt", "r").read().splitlines()
+
+
 content_numerical = []
 
 for time in range(len(content)):
@@ -54,6 +56,8 @@ for time in range(len(content)):
 			line.append(int(content[time].split(',')[i]))
 	content_numerical.append(line)
 
+print(len(content_numerical))
+
 timeseries_X= [[0 for i in range(len(content_numerical))] for j in range(len(content_numerical[0]))]
 
 for i in range(len(timeseries_X)):
@@ -64,9 +68,6 @@ timeseries_X_scaled = []
 
 for items in timeseries_X:
 	timeseries_X_scaled.append(preprocessing.scale(items))
-	file_X.write(str(np.ndarray.tolist(preprocessing.scale(items))))
-	file_X.write("\n")
-	file_X.flush()
 
 
 

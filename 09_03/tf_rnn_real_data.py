@@ -22,14 +22,15 @@ Xread, Yread = data_read()
 learning_rate = 0.001
 training_iters = 300000
 batch_size = 50
+
 display_step = 10
 
 # Network Parameters
 n_input = 16  # input is sin(x), a scalar
 n_steps = 10  # timesteps
-n_hidden = 128  # hidden layer num of features
+n_hidden = 256  # hidden layer num of features
 n_outputs = 200  # output is a series of sin(x+...)
-n_layers = 5  # number of stacked LSTM layers
+n_layers = 1  # number of stacked LSTM layers
 
 loss_array = []
 loss_array_test = []
@@ -49,6 +50,11 @@ biases = {
 # Define the LSTM cells
 lstm_cells = [rnn.LSTMCell(n_hidden, forget_bias=1.0) for _ in range(n_layers)]
 stacked_lstm = rnn.MultiRNNCell(lstm_cells)
+
+# lstm_cell = rnn.LSTMCell(n_hidden, forget_bias = 1.0)    
+# lstm_bn = [rnn.LayerNormBasicLSTMCell(n_hidden, forget_bias = 1.0) for _ in range(n_layers)]
+# stacked_lstm = rnn.MultiRNNCell(lstm_bn)
+
 outputs, states = tf.nn.dynamic_rnn(stacked_lstm, inputs=x, dtype=tf.float32, time_major=False)
 
 h = tf.transpose(outputs, [1, 0, 2])
@@ -86,8 +92,20 @@ with tf.Session() as sess:
         sess.run(optimizer, feed_dict={x: batch_x, y: batch_y})
         if step % display_step == 0:
             # Calculate batch loss
+
             loss_value = sess.run(loss, feed_dict={x: batch_x, y: batch_y})
-            loss_value_test = sess.run(loss, feed_dict={x: test_x, y: test_y})
+
+            loss_value_test = 0
+            test_size = 5
+            for i in range(test_size):
+                _, _, batch_x, batch_y, _, _, _, _, _, _, test_x, test_y= generate_sample(i*5, X_read = Xread, Y_read = Yread,f=None, t0=None, batch_size=batch_size,
+                              samples=n_steps, predict=1, ninputs = n_input, noutputs = n_outputs)
+
+                test_x = test_x.reshape((batch_size, n_steps, n_input))
+                test_y = test_y.reshape((batch_size, n_outputs))
+
+                loss_value_test += sess.run(loss, feed_dict={x: test_x, y: test_y})
+            loss_value_test = loss_value_test / test_size
             loss_array.append(loss_value)
             loss_array_test.append(loss_value_test)
             print("Iter " + str(step*batch_size) + ", Minibatch Loss= " +
@@ -126,22 +144,38 @@ with tf.Session() as sess:
     gt = np.array(gt)
     pre = np.array(pre)
 
+    print("Losses:", loss_value, loss_value_test)
+
     print(gt.shape, pre.shape)
 
+    plt.rcParams["figure.figsize"] = [3.5,3]
+    plt.legend(["Ground truth", "Prediction"], prop={'size': 5})
+    plt.subplots_adjust(hspace = 0.2)
+    plt.tight_layout()
+    plt.xlim(0, 80)
     plt.subplot(511)
     plt.plot(gt[:,20], color = 'gray')
-    plt.plot(pre[:,20], color = 'red')
+    plt.plot(pre[:,20], color = '#bf1b2c')
+    plt.tight_layout()
     plt.subplot(512)
     plt.plot(gt[:,45], color = 'gray')
-    plt.plot(pre[:,45], color = 'red')
+    plt.plot(pre[:,45], color = '#bf1b2c')
+    plt.tight_layout()
     plt.subplot(513)
     plt.plot(gt[:,76], color = 'gray')
-    plt.plot(pre[:,76], color = 'red')
+    plt.plot(pre[:,76], color = '#bf1b2c')
+    plt.tight_layout()
+    plt.ylabel("Output features")
     plt.subplot(514)
     plt.plot(gt[:,114], color = 'gray')
-    plt.plot(pre[:,114], color = 'red')
+    plt.plot(pre[:,114], color = '#bf1b2c')
+    plt.tight_layout()
     plt.subplot(515)
+    plt.xlabel("Timestep")
     plt.plot(gt[:,189], color = 'gray')
-    plt.plot(pre[:,189], color = 'red')
+    plt.plot(pre[:,189], color = '#bf1b2c')
+    plt.tight_layout()
+    plt.subplots_adjust(hspace = 0.2)
+    plt.savefig("rnn_result.pdf")
     
     plt.show()
