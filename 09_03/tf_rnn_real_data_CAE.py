@@ -27,7 +27,7 @@ Xread, Yread, array_zero = data_read()
 # Parameters
 learning_rate = 0.001
 training_iters = 100000
-batch_size = 50
+batch_size = 64
 display_step = 10
 
 # Network Parameters

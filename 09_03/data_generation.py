@@ -224,13 +224,14 @@ if __name__ == '__main__':
     Xread = np.array(Xread)
     Yread = np.array(Yread)
 
-    plt.plot(Xread[1, :], color = '#bf1b2c')
-    plt.plot(Yread[1, :], color = '#001ba5')
+    plt.plot(Xread[0, :], color = '#bf1b2c')
+    plt.plot(Yread[0, :], color = '#001ba5')
     plt.xlabel("Timestep")
+    plt.ylabel("Filtered time series")
     plt.xlim(2000, 2300)
     plt.tight_layout()
     plt.ylim(-1, 1.5)
-    plt.legend(["Input feature", "Output feature"], prop={'size': 5})
+    plt.legend(["G$_1$", "F$_1$"], prop={'size': 5})
     # plt.plot(filtered, color = 'blue')
     # plt.plot(baseline_shifting(Xread[1,:], where = [503, 1042, 1517, 2159, 3000]), color = 'blue')
 

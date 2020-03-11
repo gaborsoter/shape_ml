@@ -66,7 +66,7 @@ for k in range(1):
 	roi = frame[100:168,100:236]
 	writeout = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY) # grayscale
 
-cap = cv2.VideoCapture('../../Google\ Drive/Projects/PhD/Pubs_n_Confs/Shape_reconstruction/data/08_14/lines/batch_1000_1.avi')
+cap = cv2.VideoCapture(r'../../../Google Drive/Projects/PhD/Pubs_n_Confs/Shape_reconstruction/data/08_14/lines/batch_1000_1.avi')
 
 kkkkkk = 1
 imagedata_all  = []
@@ -103,14 +103,15 @@ while(kkkkkk!=0):
 		kkkkkk = 0
 	if cv2.waitKey(1) & 0xFF == ord('q'):
 		break
-	
+
 print(len(imagedata_all))
+
 for t in range(len(decoded_imgs)):
 	im = 255*decoded_imgs[t].reshape(68,68)
 	for i in range(68):
 		for j in range(68):
 			writeout[i,j]=im[i,j]
 			# writeout[i,j+68]=imagedata_all[t][i,j]
-			a = imagedata_all[t]
+			# a = imagedata_all[t]
 	backtorgb = cv2.cvtColor(writeout,cv2.COLOR_GRAY2RGB)
 	outvideo.write(backtorgb)
